@@ -14,4 +14,9 @@ public class NomeService {
         return nomes;
     }
 
+    public void adicionar(String nome) {
+        List<String> copia = new ArrayList<>(nomes);
+        copia.add(nome);
+        nomes = copia;
+    }
 }
