@@ -1,28 +1,57 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import ListaNomes from './components/ListaNomes';
-import CriaNome from './components/CriaNome';
+import ListaPessoas from './components/ListaPessoas';
+import CadastroPessoa from './components/CadastroPessoa';
 import './App.css';
 
 function App() {
 
-  const [nomes, setNomes] = useState([]);
+  //FIXME: Extrair esta funcoes pra arquivo a parte e refatorar código 
+  async function consultarPessoas() {
+    try {
+      const resp = await axios.get('http://localhost:8080/api/pessoas');
+      setPessoas(resp.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const [pessoas, setPessoas] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:8080/api')
-      .then(resp => setNomes(resp.data))
+    consultarPessoas()
       .catch(erro => console.log(erro));
   }, [])
   
 
   return (
-    <div className="App">
+      <div className="App">
+       
+        <ListaPessoas pessoas={pessoas} />
+        <CadastroPessoa pessoas={pessoas} setPessoas={setPessoas} />
+       
+      </div>
+    );
+
+
+
+  // const [nomes, setNomes] = useState([]);
+
+  // useEffect(() => {
+  //   axios.get('http://localhost:8080/api')
+  //     .then(resp => setNomes(resp.data))
+  //     .catch(erro => console.log(erro));
+  // }, [])
+  
+
+  // return (
+  //   <div className="App">
      
-      <ListaNomes nomes={nomes} />
-      <CriaNome nomes={nomes} fcAdicionaNome={setNomes} />
+  //     <ListaNomes nomes={nomes} />
+  //     <CriaNome nomes={nomes} fcAdicionaNome={setNomes} />
      
-    </div>
-  );
+  //   </div>
+  // );
 }
 
 export default App;
